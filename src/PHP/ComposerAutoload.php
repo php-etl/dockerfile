@@ -60,7 +60,6 @@ final class ComposerAutoload implements Dockerfile\LayerInterface
             )
         }, array_keys($this->autoloads), array_values($this->autoloads)));
 
-        $d = $commands;
         return (string) new Dockerfile\Run(
             <<<RUN
             set -ex \\
