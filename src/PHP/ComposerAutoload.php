@@ -52,6 +52,10 @@ final class ComposerAutoload implements Dockerfile\LayerInterface
 
     public function __toString()
     {
+        if (count($this->autoloads) <= 0) {
+            return '';
+        }
+
         $commands = implode(' \\' . PHP_EOL . '    && ', array_map(fn ($type, $autoload) => match ($type) {
             'psr4' => self::pipe(
                 self::command('cat', 'composer.json'),
