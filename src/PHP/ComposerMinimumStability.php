@@ -6,19 +6,16 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final class ComposerMinimumStability implements Dockerfile\LayerInterface
+final readonly class ComposerMinimumStability implements Dockerfile\LayerInterface, \Stringable
 {
-    private string $minimumStability;
-
-    public function __construct(string $minimumStability)
+    public function __construct(private string $minimumStability)
     {
-        $this->minimumStability = $minimumStability;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) new Dockerfile\Run(sprintf(<<<RUN
-            set -ex \\
+        return (string) new Dockerfile\Run(sprintf(<<<'RUN'
+            set -ex \
                 && composer config minimum-stability %s
             RUN, $this->minimumStability));
     }

@@ -6,19 +6,19 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final class ComposerRequire implements Dockerfile\LayerInterface
+final class ComposerRequire implements Dockerfile\LayerInterface, \Stringable
 {
-    private iterable $packages;
+    private readonly iterable $packages;
 
     public function __construct(string ...$packages)
     {
         $this->packages = $packages;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) new Dockerfile\Run(sprintf(<<<RUN
-            set -ex \\
+        return (string) new Dockerfile\Run(sprintf(<<<'RUN'
+            set -ex \
                 && composer require --prefer-dist --no-progress --prefer-stable --sort-packages --optimize-autoloader --with-dependencies %s
             RUN, implode(' ', $this->packages)));
     }

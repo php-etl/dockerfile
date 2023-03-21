@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Kiboko\Component\Dockerfile\Dockerfile;
 
-final class Maintainer implements LayerInterface
+final readonly class Maintainer implements LayerInterface, \Stringable
 {
-    private string $name;
-    private string $email;
-
-    public function __construct(string $name, string $email)
+    public function __construct(private string $name, private string $email)
     {
-        $this->name = $name;
-        $this->email = $email;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('LABEL maintainer="%s <%s>"', $this->name, $this->email);
     }

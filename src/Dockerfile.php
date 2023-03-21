@@ -7,7 +7,7 @@ namespace Kiboko\Component\Dockerfile;
 use Kiboko\Component\Dockerfile\Dockerfile\LayerInterface;
 use Kiboko\Contract\Packaging\FileInterface;
 
-final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface
+final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface, \Stringable
 {
     /** @var iterable|Dockerfile\LayerInterface[] */
     private iterable $layers;
@@ -22,11 +22,9 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface
         array_push($this->layers, ...$layers);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return implode(PHP_EOL, array_map(function (LayerInterface $layer) {
-            return (string) $layer . PHP_EOL;
-        }, $this->layers));
+        return implode(\PHP_EOL, array_map(fn (LayerInterface $layer) => (string) $layer.\PHP_EOL, $this->layers));
     }
 
     public function getIterator(): \ArrayIterator
@@ -36,14 +34,14 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface
 
     public function count(): int
     {
-        return count($this->layers);
+        return \count($this->layers);
     }
 
     public function asResource()
     {
         $resource = fopen('php://temp', 'rb+');
         fwrite($resource, (string) $this);
-        fseek($resource, 0, SEEK_SET);
+        fseek($resource, 0, \SEEK_SET);
 
         return $resource;
     }
