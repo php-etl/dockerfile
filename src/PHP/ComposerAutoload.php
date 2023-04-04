@@ -6,16 +6,14 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final class ComposerAutoload implements Dockerfile\LayerInterface
+final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Stringable
 {
-    /**
-     * @param array<string, array<string, string|list<string>>> $autoloads
-     */
-    private array $autoloads;
-
-    public function __construct(array $autoloads)
-    {
-        $this->autoloads = $autoloads;
+    public function __construct(
+        /**
+         * @param array<string, array<string, string|list<string>>> $autoloads
+         */
+        private array $autoloads
+    ) {
     }
 
     private static function command(string ...$command): string
@@ -50,25 +48,25 @@ final class ComposerAutoload implements Dockerfile\LayerInterface
         return implode(' | ', $commands);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        if (count($this->autoloads) <= 0) {
+        if (\count($this->autoloads) <= 0) {
             return '';
         }
 
-        $commands = implode(' \\' . PHP_EOL . '    && ', array_map(fn ($type, $autoload) => match ($type) {
+        $commands = implode(' \\'.\PHP_EOL.'    && ', array_map(fn ($type, $autoload) => match ($type) {
             'psr4' => self::pipe(
                 self::command('cat', 'composer.json'),
-                self::command('jq', '--indent', '4', sprintf('.autoload."psr-4" |= . + %s', json_encode($autoload))),
+                self::command('jq', '--indent', '4', sprintf('.autoload."psr-4" |= . + %s', json_encode($autoload, \JSON_THROW_ON_ERROR))),
                 self::command('tee', 'composer.json')
             )
         }, array_keys($this->autoloads), array_values($this->autoloads)));
 
         return (string) new Dockerfile\Run(
             <<<RUN
-            set -ex \\
-                && {$commands}
-            RUN
+                set -ex \\
+                    && {$commands}
+                RUN
         );
     }
 }
