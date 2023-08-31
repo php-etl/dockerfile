@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Kiboko\Component\Dockerfile\Dockerfile;
 
-final class Label implements LayerInterface
+final readonly class Label implements LayerInterface, \Stringable
 {
-    private string $key;
-    private string $value;
-
-    public function __construct(string $key, string $value)
+    public function __construct(private string $key, private string $value)
     {
-        $this->key = $key;
-        $this->value = $value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('LABEL %s="%s"', $this->key, $this->value);
     }

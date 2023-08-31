@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace Kiboko\Component\Dockerfile\Dockerfile;
 
-final class Copy implements LayerInterface
+final readonly class Copy implements LayerInterface, \Stringable
 {
-    private string $source;
-    private string $destination;
-
-    public function __construct(string $source, string $destination)
+    public function __construct(private string $source, private string $destination)
     {
-        $this->source = $source;
-        $this->destination = $destination;
     }
 
     /** @return \Iterator|self[] */
@@ -23,7 +18,7 @@ final class Copy implements LayerInterface
             \RecursiveDirectoryIterator::SKIP_DOTS
             | \RecursiveDirectoryIterator::FOLLOW_SYMLINKS
             | \RecursiveDirectoryIterator::CURRENT_AS_FILEINFO
-            | \RecursiveDirectoryIterator::KEY_AS_PATHNAME
+            | \RecursiveDirectoryIterator::KEY_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
         );
 
         /** @var \SplFileInfo $fileInfo */
@@ -41,16 +36,19 @@ final class Copy implements LayerInterface
 
     /**
      * @param \Iterator<array<string,string>> $iterator
-     * @return \Iterator|self[]
      */
     public static function iterator(\Iterator $iterator): \Iterator
     {
+        /**
+         * @var string $sourcePath
+         * @var string $destinationPath
+         */
         foreach ($iterator as [$sourcePath, $destinationPath]) {
             yield new self($sourcePath, $destinationPath);
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('COPY %s %s', $this->source, $this->destination);
     }

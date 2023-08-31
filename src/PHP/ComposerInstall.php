@@ -6,15 +6,15 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final class ComposerInstall implements Dockerfile\LayerInterface
+final class ComposerInstall implements Dockerfile\LayerInterface, \Stringable
 {
-    public function __toString()
+    public function __toString(): string
     {
         return (string) new Dockerfile\Run(
-            <<<RUN
-            set -ex \\
-                && composer install --prefer-dist --no-progress --prefer-stable --sort-packages --optimize-autoloader --no-dev
-            RUN
+            <<<'RUN'
+                set -ex \
+                    && composer install --prefer-dist --no-progress --prefer-stable --sort-packages --optimize-autoloader --no-dev
+                RUN
         );
     }
 }

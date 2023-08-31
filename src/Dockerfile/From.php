@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Kiboko\Component\Dockerfile\Dockerfile;
 
-final class From implements LayerInterface
+final readonly class From implements LayerInterface, \Stringable
 {
-    private string $source;
-
-    public function __construct(string $source)
+    public function __construct(private string $source)
     {
-        $this->source = $source;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('FROM %s', $this->source);
     }

@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Kiboko\Component\Dockerfile\Dockerfile;
 
-final class Run implements LayerInterface
+final readonly class Run implements LayerInterface, \Stringable
 {
-    private string $command;
-
-    public function __construct(string $command)
+    public function __construct(private string $command)
     {
-        $this->command = $command;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('RUN %s', $this->command);
     }

@@ -6,11 +6,11 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final readonly class ComposerAddVcsRepository implements Dockerfile\LayerInterface, \Stringable
+final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
-        private string $name,
-        private string $url
+        private string $url,
+        private string $token,
     ) {
     }
 
@@ -18,7 +18,7 @@ final readonly class ComposerAddVcsRepository implements Dockerfile\LayerInterfa
     {
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
-                && composer config repositories.%s vcs %s
-            RUN, $this->name, $this->url));
+                && composer config --auth %s token %s
+            RUN, $this->url, $this->token));
     }
 }
