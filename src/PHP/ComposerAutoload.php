@@ -50,7 +50,7 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
 
     private static function indirection(string $command, string $destination): string
     {
-        return $command . ' > ' . self::escapeArgument($destination);
+        return $command.' > '.self::escapeArgument($destination);
     }
 
     private static function and(string ...$commands): string
