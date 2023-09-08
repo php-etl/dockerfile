@@ -17,7 +17,8 @@ final readonly class ComposerInit implements Dockerfile\LayerInterface, \Stringa
         return (string) new Dockerfile\Run(sprintf(
             <<<'RUN'
                 set -ex \
-                    && composer init --no-interaction --name=%s && pwd
+                    && composer init --no-interaction --name=%s \
+                    && composer config use-github-api false
                 RUN,
             $this->name
         ));
