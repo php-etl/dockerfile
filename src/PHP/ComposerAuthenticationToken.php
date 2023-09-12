@@ -11,8 +11,7 @@ final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInte
     public function __construct(
         private string $url,
         private string $token,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {
