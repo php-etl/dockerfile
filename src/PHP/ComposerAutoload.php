@@ -47,19 +47,39 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
         return implode(' | ', $commands);
     }
 
+    private static function indirection(string $command, string $destination): string
+    {
+        return $command.' > '.self::escapeArgument($destination);
+    }
+
+    private static function and(string ...$commands): string
+    {
+        return implode(' \\'.\PHP_EOL.'    && ', $commands);
+    }
+
     public function __toString(): string
     {
         if (\count($this->autoloads) <= 0) {
             return '';
         }
 
-        $commands = implode(' \\'.\PHP_EOL.'    && ', array_map(fn ($type, $autoload) => match ($type) {
-            'psr4' => self::pipe(
-                self::command('cat', 'composer.json'),
-                self::command('jq', '--indent', '4', sprintf('.autoload."psr-4" |= . + %s', json_encode($autoload, \JSON_THROW_ON_ERROR))),
-                self::command('tee', 'composer.json')
+        $commands = self::and(
+            ...array_map(
+                fn ($type, $autoload) => match ($type) {
+                    'psr4' => self::and(
+                        self::pipe(
+                            self::command('cat', 'composer.json'),
+                            self::command('jq', '--indent', '4', sprintf('.autoload."psr-4" |= . + %s', json_encode($autoload, \JSON_THROW_ON_ERROR))),
+                            self::command('tee', 'composer.temp')
+                        ),
+                        self::indirection(self::command('cat', 'composer.temp'), 'composer.json'),
+                        self::command('rm', 'composer.temp'),
+                    )
+                },
+                array_keys($this->autoloads),
+                array_values($this->autoloads)
             )
-        }, array_keys($this->autoloads), array_values($this->autoloads)));
+        );
 
         return (string) new Dockerfile\Run(
             <<<RUN
