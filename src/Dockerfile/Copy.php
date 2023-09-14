@@ -6,9 +6,7 @@ namespace Kiboko\Component\Dockerfile\Dockerfile;
 
 final readonly class Copy implements LayerInterface, \Stringable
 {
-    public function __construct(private string $source, private string $destination)
-    {
-    }
+    public function __construct(private string $source, private string $destination) {}
 
     /** @return \Iterator|self[] */
     public static function directory(string $sourcePath, string $destinationPath): \Iterator

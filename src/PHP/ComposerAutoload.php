@@ -13,8 +13,7 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
          * @param array<string, array<string, string|list<string>>> $autoloads
          */
         private array $autoloads
-    ) {
-    }
+    ) {}
 
     private static function command(string ...$command): string
     {

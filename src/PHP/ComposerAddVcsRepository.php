@@ -11,8 +11,7 @@ final readonly class ComposerAddVcsRepository implements Dockerfile\LayerInterfa
     public function __construct(
         private string $name,
         private string $url
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

@@ -8,9 +8,7 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 
 final readonly class ComposerMinimumStability implements Dockerfile\LayerInterface, \Stringable
 {
-    public function __construct(private string $minimumStability)
-    {
-    }
+    public function __construct(private string $minimumStability) {}
 
     public function __toString(): string
     {
