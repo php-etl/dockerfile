@@ -6,7 +6,9 @@ namespace Kiboko\Component\Dockerfile\Dockerfile;
 
 final readonly class Maintainer implements LayerInterface, \Stringable
 {
-    public function __construct(private string $name, private string $email) {}
+    public function __construct(private string $name, private string $email)
+    {
+    }
 
     public function __toString(): string
     {
