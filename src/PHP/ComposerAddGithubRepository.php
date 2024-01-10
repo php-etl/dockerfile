@@ -11,7 +11,8 @@ final readonly class ComposerAddGithubRepository implements Dockerfile\LayerInte
     public function __construct(
         private string $name,
         private string $url
-    ) {}
+    ) {
+    }
 
     public function __toString(): string
     {

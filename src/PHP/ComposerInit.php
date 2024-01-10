@@ -8,7 +8,9 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 
 final readonly class ComposerInit implements Dockerfile\LayerInterface, \Stringable
 {
-    public function __construct(private string $name) {}
+    public function __construct(private string $name)
+    {
+    }
 
     public function __toString(): string
     {
