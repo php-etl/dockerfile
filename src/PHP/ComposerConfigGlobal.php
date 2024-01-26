@@ -6,7 +6,7 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-final readonly class ComposerConfig implements Dockerfile\LayerInterface, \Stringable
+final readonly class ComposerConfigGlobal implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
         private string $host,
