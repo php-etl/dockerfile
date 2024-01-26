@@ -11,8 +11,7 @@ final readonly class ComposerConfig implements Dockerfile\LayerInterface, \Strin
     public function __construct(
         private string $host,
         private string $token,
-    )
-    {
+    ) {
     }
 
     public function __toString(): string
