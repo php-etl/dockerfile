@@ -14,9 +14,10 @@ final readonly class Arg implements LayerInterface, \Stringable
 
     public function __toString(): string
     {
-        if ($this->defaultValue !== null) {
+        if (null !== $this->defaultValue) {
             return sprintf('ARG %s=%s', $this->name, $this->defaultValue);
         }
+
         return sprintf('ARG %s', $this->name);
     }
 }
