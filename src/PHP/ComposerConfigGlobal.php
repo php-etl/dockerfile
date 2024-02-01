@@ -10,18 +10,15 @@ final readonly class ComposerConfigGlobal implements Dockerfile\LayerInterface, 
 {
     public function __construct(
         private string $host,
-        private string $token,
+        private string $tokenArgument,
     ) {
     }
 
     public function __toString(): string
     {
-        return (string) new Dockerfile\Run(sprintf(
-            <<<'RUN'
-                composer config --global %s %s
-                RUN,
-            $this->host,
-            $this->token,
-        ));
+        return (string) new Dockerfile\Run(<<<"RUN"
+            composer config --global {$this->host} \${{$this->tokenArgument}}
+            RUN,
+        );
     }
 }
