@@ -9,7 +9,7 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 final readonly class ComposerHttpBearerAuthentication implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
-        private string $url,
+        private string $domain,
         private string $token,
     ) {
     }
@@ -19,6 +19,6 @@ final readonly class ComposerHttpBearerAuthentication implements Dockerfile\Laye
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
                 && composer config --auth bearer.%s %s
-            RUN, $this->url, $this->token));
+            RUN, $this->domain, $this->token));
     }
 }

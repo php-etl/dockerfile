@@ -10,6 +10,7 @@ final readonly class ComposerGithubOauthAuthentication implements Dockerfile\Lay
 {
     public function __construct(
         private string $token,
+        private string $domain = 'github.com',
     ) {
     }
 
@@ -17,7 +18,7 @@ final readonly class ComposerGithubOauthAuthentication implements Dockerfile\Lay
     {
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
-                && composer config --auth github-oauth.github.com %s
-            RUN, $this->token));
+                && composer config --auth github-oauth.%s %s
+            RUN, $this->domain, $this->token));
     }
 }

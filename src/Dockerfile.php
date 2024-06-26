@@ -12,7 +12,7 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface,
     /** @var iterable|Dockerfile\LayerInterface[] */
     private iterable $layers;
 
-    public function __construct(null|LayerInterface ...$layers)
+    public function __construct(?LayerInterface ...$layers)
     {
         $this->layers = $layers;
     }

@@ -9,7 +9,7 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 final readonly class ComposerHttpBasicAuthentication implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
-        private string $url,
+        private string $domain,
         private string $username,
         private string $password,
     ) {
@@ -20,6 +20,6 @@ final readonly class ComposerHttpBasicAuthentication implements Dockerfile\Layer
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
                 && composer config --auth http-basic.%s %s %s
-            RUN, $this->url, $this->username, $this->password));
+            RUN, $this->domain, $this->username, $this->password));
     }
 }

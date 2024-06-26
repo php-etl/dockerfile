@@ -10,7 +10,7 @@ final readonly class ComposerGitlabOauthAuthentication implements Dockerfile\Lay
 {
     public function __construct(
         private string $token,
-        private string $instance = 'gitlab.com',
+        private string $domain = 'gitlab.com',
     ) {
     }
 
@@ -19,6 +19,6 @@ final readonly class ComposerGitlabOauthAuthentication implements Dockerfile\Lay
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
                 && composer config --auth gitlab-oauth.%s %s
-            RUN, $this->instance, $this->token));
+            RUN, $this->domain, $this->token));
     }
 }
