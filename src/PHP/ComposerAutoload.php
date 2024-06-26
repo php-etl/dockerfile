@@ -38,7 +38,7 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
         if (!preg_match('/[\/()%!^"<>&|\s]/', $argument)) {
             return $argument;
         }
-        $argument = preg_replace('/(\\\\+)$/', '$1$1', $argument);
+        $argument = preg_replace('/(\\\+)$/', '$1$1', $argument);
 
         return '"'.str_replace(['"', '^', '%', '!', "\n"], ['""', '"^^"', '"^%"', '"^!"', '!LF!'], $argument).'"';
     }
