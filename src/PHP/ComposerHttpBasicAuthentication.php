@@ -6,12 +6,12 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-/** @deprecated */
-final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInterface, \Stringable
+final readonly class ComposerHttpBasicAuthentication implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
         private string $url,
-        private string $token,
+        private string $username,
+        private string $password,
     ) {
     }
 
@@ -19,7 +19,7 @@ final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInte
     {
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
-                && composer config --auth %s token %s
-            RUN, $this->url, $this->token));
+                && composer config --auth http-basic.%s %s %s
+            RUN, $this->url, $this->username, $this->password));
     }
 }

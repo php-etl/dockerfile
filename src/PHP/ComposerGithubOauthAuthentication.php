@@ -6,11 +6,9 @@ namespace Kiboko\Component\Dockerfile\PHP;
 
 use Kiboko\Component\Dockerfile\Dockerfile;
 
-/** @deprecated */
-final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInterface, \Stringable
+final readonly class ComposerGithubOauthAuthentication implements Dockerfile\LayerInterface, \Stringable
 {
     public function __construct(
-        private string $url,
         private string $token,
     ) {
     }
@@ -19,7 +17,7 @@ final readonly class ComposerAuthenticationToken implements Dockerfile\LayerInte
     {
         return (string) new Dockerfile\Run(sprintf(<<<'RUN'
             set -ex \
-                && composer config --auth %s token %s
-            RUN, $this->url, $this->token));
+                && composer config --auth github-oauth.github.com %s
+            RUN, $this->token));
     }
 }
