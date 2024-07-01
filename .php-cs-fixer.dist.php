@@ -34,6 +34,9 @@ return (new PhpCsFixer\Config())
         'error_suppression' => true,
         'ereg_to_preg' => true,
         'dir_constant' => true,
+        'string_implicit_backslashes' => [
+            'single_quoted' => 'ignore',
+        ],
     ])
     ->setFinder($finder)
     ->setCacheFile('.php-cs-fixer.cache') // forward compatibility with 3.x line
