@@ -7,14 +7,17 @@ namespace Kiboko\Component\Dockerfile;
 use Kiboko\Component\Dockerfile\Dockerfile\LayerInterface;
 use Kiboko\Contract\Packaging\FileInterface;
 
+/**
+ * @implements \IteratorAggregate<int, LayerInterface>
+ */
 final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface, \Stringable
 {
-    /** @var iterable|Dockerfile\LayerInterface[] */
-    private iterable $layers;
+    /** @var array<int, LayerInterface> */
+    private array $layers = [];
 
     public function __construct(null|LayerInterface ...$layers)
     {
-        $this->layers = $layers;
+        $this->layers = array_values(array_filter($layers, static fn (?LayerInterface $l) => $l !== null));
     }
 
     public function push(LayerInterface ...$layers): void
@@ -27,6 +30,9 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface,
         return implode(\PHP_EOL, array_map(fn (LayerInterface $layer) => (string) $layer.\PHP_EOL, $this->layers));
     }
 
+    /**
+     * @return \ArrayIterator<int, LayerInterface>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->layers);
@@ -37,9 +43,13 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface,
         return \count($this->layers);
     }
 
+    /** @return resource */
     public function asResource()
     {
         $resource = fopen('php://temp', 'rb+');
+        if ($resource === false) {
+            throw new \RuntimeException('Failed to open php://temp stream');
+        }
         fwrite($resource, (string) $this);
         fseek($resource, 0, \SEEK_SET);
 

@@ -8,10 +8,10 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 
 final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Stringable
 {
+    /**
+     * @param array<string, array<string, array<int|string, string>|string>> $autoloads
+     */
     public function __construct(
-        /**
-         * @param array<string, array<string, string|list<string>>> $autoloads
-         */
         private array $autoloads
     ) {
     }
@@ -38,7 +38,7 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
         if (!preg_match('/[\/()%!^"<>&|\s]/', $argument)) {
             return $argument;
         }
-        $argument = preg_replace('/(\\\\+)$/', '$1$1', $argument);
+        $argument = preg_replace('/(\\\\+)$/', '$1$1', $argument) ?? $argument;
 
         return '"'.str_replace(['"', '^', '%', '!', "\n"], ['""', '"^^"', '"^%"', '"^!"', '!LF!'], $argument).'"';
     }
@@ -66,7 +66,7 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
 
         $commands = self::and(
             ...array_map(
-                fn ($type, $autoload) => match ($type) {
+                fn (int|string $type, mixed $autoload) => match ($type) {
                     'psr4' => self::and(
                         self::pipe(
                             self::command('cat', 'composer.json'),
@@ -75,7 +75,8 @@ final readonly class ComposerAutoload implements Dockerfile\LayerInterface, \Str
                         ),
                         self::indirection(self::command('cat', 'composer.temp'), 'composer.json'),
                         self::command('rm', 'composer.temp'),
-                    )
+                    ),
+                    default => throw new \InvalidArgumentException(sprintf('Unsupported autoload type: %s', $type)),
                 },
                 array_keys($this->autoloads),
                 array_values($this->autoloads)

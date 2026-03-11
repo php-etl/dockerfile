@@ -6,11 +6,12 @@ namespace Kiboko\Component\Dockerfile\Dockerfile;
 
 final class Cmd implements LayerInterface, \Stringable
 {
-    private readonly iterable $command;
+    /** @var array<int, string> */
+    private readonly array $command;
 
     public function __construct(string ...$command)
     {
-        $this->command = $command;
+        $this->command = array_values($command);
     }
 
     public function __toString(): string

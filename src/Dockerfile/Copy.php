@@ -27,10 +27,10 @@ final readonly class Copy implements LayerInterface, \Stringable
                 continue;
             }
 
-            yield new self(
-                preg_replace('/^'.preg_quote($sourcePath, '/').'/', '', $fileInfo->getPathname()),
-                preg_replace('/^'.preg_quote($sourcePath, '/').'/', $destinationPath, $fileInfo->getPathname()),
-            );
+            $pathname = $fileInfo->getPathname();
+            $source = preg_replace('/^'.preg_quote($sourcePath, '/').'/', '', $pathname) ?? $pathname;
+            $destination = preg_replace('/^'.preg_quote($sourcePath, '/').'/', $destinationPath, $pathname) ?? $pathname;
+            yield new self($source, $destination);
         }
     }
 

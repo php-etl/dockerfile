@@ -8,11 +8,12 @@ use Kiboko\Component\Dockerfile\Dockerfile;
 
 final class ComposerRequire implements Dockerfile\LayerInterface, \Stringable
 {
-    private readonly iterable $packages;
+    /** @var array<int, string> */
+    private readonly array $packages;
 
     public function __construct(string ...$packages)
     {
-        $this->packages = $packages;
+        $this->packages = array_values($packages);
     }
 
     public function __toString(): string
