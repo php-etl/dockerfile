@@ -15,7 +15,7 @@ final class Dockerfile implements \IteratorAggregate, \Countable, FileInterface,
     /** @var array<int, LayerInterface> */
     private array $layers = [];
 
-    public function __construct(null|LayerInterface ...$layers)
+    public function __construct(?LayerInterface ...$layers)
     {
         $this->layers = array_values(array_filter($layers, static fn (?LayerInterface $l) => $l !== null));
     }
